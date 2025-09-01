@@ -1,30 +1,29 @@
 #!/usr/bin/env python3
 import streamlit as st
 import ipaddress
-import pandas as pd
 import io
 
 def generate_nat_mapping(dmz_range, internal_range):
-    """Génère le mapping NAT 1:1 entre deux ranges IP"""
+    """Generate 1:1 NAT mapping between two IP ranges"""
     try:
-        # Créer les réseaux
+        # Create networks
         dmz_network = ipaddress.ip_network(dmz_range, strict=False)
         internal_network = ipaddress.ip_network(internal_range, strict=False)
         
-        # Vérifier que les masques sont identiques
+        # Check that masks are identical
         if dmz_network.prefixlen != internal_network.prefixlen:
-            return None, f"❌ ERREUR: Les masques doivent être identiques! DMZ: /{dmz_network.prefixlen}, Interne: /{internal_network.prefixlen}"
+            return None, f"❌ ERROR: Subnet masks must be identical! DMZ: /{dmz_network.prefixlen}, Internal: /{internal_network.prefixlen}"
         
-        # Générer les listes d'IPs
+        # Generate IP lists
         dmz_ips = list(dmz_network.hosts())
         internal_ips = list(internal_network.hosts())
         
-        # Si pas d'hôtes (petit réseau), prendre toutes les adresses
+        # If no hosts (small network), take all addresses
         if not dmz_ips:
             dmz_ips = list(dmz_network)
             internal_ips = list(internal_network)
         
-        # Créer le mapping
+        # Create mapping
         mappings = []
         for dmz_ip, internal_ip in zip(dmz_ips, internal_ips):
             mappings.append({
@@ -35,9 +34,9 @@ def generate_nat_mapping(dmz_range, internal_range):
         return mappings, None
         
     except ValueError as e:
-        return None, f"❌ ERREUR: Format d'IP invalide - {e}"
+        return None, f"❌ ERROR: Invalid IP format - {e}"
     except Exception as e:
-        return None, f"❌ ERREUR: {e}"
+        return None, f"❌ ERROR: {e}"
 
 def main():
     # Page configuration
@@ -102,19 +101,19 @@ def main():
                 
                 # Display table
                 st.subheader("✅ 1:1 NAT MAPPING")
-                df = pd.DataFrame(mappings)
                 
-                # Styled table display
+                # Streamlit can display list of dicts directly
                 st.dataframe(
-                    df,
+                    mappings,
                     use_container_width=True,
                     hide_index=True
                 )
                 
-                # CSV download button
-                csv_buffer = io.StringIO()
-                df.to_csv(csv_buffer, index=False)
-                csv_data = csv_buffer.getvalue()
+                # CSV download button - create CSV manually
+                csv_lines = ["DMZ_IP,Internal_IP"]
+                for mapping in mappings:
+                    csv_lines.append(f"{mapping['DMZ_IP']},{mapping['Internal_IP']}")
+                csv_data = "\n".join(csv_lines)
                 
                 st.download_button(
                     label="💾 Download as CSV",
@@ -174,7 +173,8 @@ def main():
             }
         ]
         
-        st.table(pd.DataFrame(examples))
+        # Streamlit can display list of dicts directly
+        st.table(examples)
         
         # Footer with creator info
         st.markdown("---")
