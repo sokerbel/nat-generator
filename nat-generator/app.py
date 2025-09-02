@@ -82,7 +82,7 @@ def main():
         
         generate_button = st.button("🚀 Generate Mapping", type="primary", use_container_width=True)
     
-    # Info message when no generation has been done
+    # Info message when no generation has been done (outside columns, full width)
     if not generate_button:
         st.info("👆 Configure your IP ranges above and click 'Generate Mapping' to start")
     
@@ -152,9 +152,36 @@ def main():
         else:
             st.warning("⚠️ Please fill in both IP ranges")
     
-    else:
-        # Initial state - show welcome message
-        st.info("👆 Configure your IP ranges above and click 'Generate Mapping' to start")
+    # Usage Examples section at the bottom - ALWAYS DISPLAYED
+    st.markdown("---")
+    st.subheader("📚 Usage Examples")
+    
+    # Examples in a more compact layout
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.markdown("""
+        **Small (/30)**
+        - DMZ: 192.168.1.0/30
+        - Internal: 10.0.1.0/30
+        - IPs: 2 addresses
+        """)
+    
+    with col2:
+        st.markdown("""
+        **Medium (/26)**
+        - DMZ: 192.168.1.0/26
+        - Internal: 10.188.65.0/26
+        - IPs: 62 addresses
+        """)
+    
+    with col3:
+        st.markdown("""
+        **Large (/24)**
+        - DMZ: 192.168.1.0/24
+        - Internal: 10.0.1.0/24
+        - IPs: 254 addresses
+        """)
         
     # Footer with creator info
     st.markdown("---")
