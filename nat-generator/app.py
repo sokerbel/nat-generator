@@ -61,8 +61,10 @@ def main():
         unsafe_allow_html=True
     )
     
-    # Sidebar for configuration
-    with st.sidebar:
+    # Main layout with columns
+    col_main, col_examples = st.columns([2, 1])
+    
+    with col_main:
         st.header("📍 IP Range Configuration")
         
         dmz_range = st.text_input(
@@ -79,7 +81,33 @@ def main():
         
         generate_button = st.button("🚀 Generate Mapping", type="primary")
     
-    # Main area
+    with col_examples:
+        st.header("📚 Usage Examples")
+        
+        examples = [
+            {
+                "Case": "Small (/30)",
+                "DMZ": "192.168.1.0/30", 
+                "Internal": "10.0.1.0/30",
+                "IPs": "2 addresses"
+            },
+            {
+                "Case": "Medium (/26)",
+                "DMZ": "192.168.1.0/26",
+                "Internal": "10.188.65.0/26", 
+                "IPs": "62 addresses"
+            },
+            {
+                "Case": "Large (/24)",
+                "DMZ": "192.168.1.0/24",
+                "Internal": "10.0.1.0/24",
+                "IPs": "254 addresses"
+            }
+        ]
+        
+        st.table(examples)
+    
+    # Results area
     if generate_button:
         if dmz_range and internal_range:
             with st.spinner("Generating mapping..."):
@@ -146,48 +174,20 @@ def main():
             st.warning("⚠️ Please fill in both IP ranges")
     
     else:
-        # Home page
-        st.info("👈 Configure your IP ranges in the sidebar and click 'Generate Mapping'")
+        # Initial state - show welcome message
+        st.info("👆 Configure your IP ranges above and click 'Generate Mapping' to start")
         
-        # Examples
-        st.subheader("📚 Usage Examples")
-        
-        examples = [
-            {
-                "Case": "Small network (/30)",
-                "DMZ": "192.168.1.0/30", 
-                "Internal": "10.0.1.0/30",
-                "IPs": "2 usable addresses"
-            },
-            {
-                "Case": "Medium network (/26)",
-                "DMZ": "192.168.1.0/26",
-                "Internal": "10.188.65.0/26", 
-                "IPs": "62 usable addresses"
-            },
-            {
-                "Case": "Large network (/24)",
-                "DMZ": "192.168.1.0/24",
-                "Internal": "10.0.1.0/24",
-                "IPs": "254 usable addresses"
-            }
-        ]
-        
-        # Streamlit can display list of dicts directly
-        st.table(examples)
-        
-        # Footer with creator info
-        st.markdown("---")
-        st.markdown(
-            """
-            <div style='text-align: center; margin-top: 30px; color: #888;'>
-                <p>🛠️ Built by <strong><a href='https://www.linkedin.com/in/sofiane-kerbel' target='_blank'>Sofiane Kerbel</a></strong></p>
-                <p style='font-size: 12px;'>Network Administration Tool | 1:1 NAT Mapping Generator</p>
-            </div>
-            """, 
-            unsafe_allow_html=True
-        )
+    # Footer with creator info
+    st.markdown("---")
+    st.markdown(
+        """
+        <div style='text-align: center; margin-top: 30px; color: #888;'>
+            <p>🛠️ Built by <strong><a href='https://www.linkedin.com/in/sofiane-kerbel' target='_blank'>Sofiane Kerbel</a></strong></p>
+            <p style='font-size: 12px;'>Network Administration Tool | 1:1 NAT Mapping Generator</p>
+        </div>
+        """, 
+        unsafe_allow_html=True
+    )
 
 if __name__ == "__main__":
     main()
-
