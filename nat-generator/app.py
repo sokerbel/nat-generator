@@ -61,13 +61,13 @@ def main():
         unsafe_allow_html=True
     )
     
-    # Main layout with configuration centered and examples on the right
-    col_config, col_examples = st.columns([2, 1])
+    # Main layout - Configuration full width
+    st.header("📍 IP Range Configuration")
     
-    with col_config:
-        st.header("📍 IP Range Configuration")
-        
-        # Configuration form
+    # Configuration form in centered columns
+    col1, col2, col3 = st.columns([1, 2, 1])
+    
+    with col2:
         dmz_range = st.text_input(
             "DMZ Range",
             value="192.168.1.0/26",
@@ -80,36 +80,7 @@ def main():
             help="Format: IP/mask (e.g., 10.188.65.0/26)"
         )
         
-        # Center the button
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            generate_button = st.button("🚀 Generate Mapping", type="primary", use_container_width=True)
-    
-    with col_examples:
-        st.header("📚 Usage Examples")
-        
-        examples = [
-            {
-                "Case": "Small (/30)",
-                "DMZ": "192.168.1.0/30", 
-                "Internal": "10.0.1.0/30",
-                "IPs": "2 addresses"
-            },
-            {
-                "Case": "Medium (/26)",
-                "DMZ": "192.168.1.0/26",
-                "Internal": "10.188.65.0/26", 
-                "IPs": "62 addresses"
-            },
-            {
-                "Case": "Large (/24)",
-                "DMZ": "192.168.1.0/24",
-                "Internal": "10.0.1.0/24",
-                "IPs": "254 addresses"
-            }
-        ]
-        
-        st.table(examples)
+        generate_button = st.button("🚀 Generate Mapping", type="primary", use_container_width=True)
     
     # Info message when no generation has been done
     if not generate_button:
