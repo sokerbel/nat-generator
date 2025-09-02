@@ -53,7 +53,7 @@ def main():
     # Creator information
     st.markdown(
         """
-        <div style='text-align: center; margin-bottom: 20px; padding: 10px; background-color: #f0f2f6; border-radius: 10px;'>
+        <div style='text-align: center; margin-bottom: 30px; padding: 10px; background-color: #f0f2f6; border-radius: 10px;'>
             <p style='margin: 0; color: #666;'>Created by <strong>Sofiane Kerbel</strong></p>
             <p style='margin: 5px 0 0 0;'><a href='https://www.linkedin.com/in/sofiane-kerbel' target='_blank'>🔗 LinkedIn Profile</a></p>
         </div>
@@ -61,12 +61,13 @@ def main():
         unsafe_allow_html=True
     )
     
-    # Main layout with columns
-    col_main, col_examples = st.columns([2, 1])
+    # Main layout with configuration centered and examples on the right
+    col_config, col_examples = st.columns([2, 1])
     
-    with col_main:
+    with col_config:
         st.header("📍 IP Range Configuration")
         
+        # Configuration form
         dmz_range = st.text_input(
             "DMZ Range",
             value="192.168.1.0/26",
@@ -79,7 +80,10 @@ def main():
             help="Format: IP/mask (e.g., 10.188.65.0/26)"
         )
         
-        generate_button = st.button("🚀 Generate Mapping", type="primary")
+        # Center the button
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            generate_button = st.button("🚀 Generate Mapping", type="primary", use_container_width=True)
     
     with col_examples:
         st.header("📚 Usage Examples")
@@ -107,7 +111,11 @@ def main():
         
         st.table(examples)
     
-    # Results area
+    # Info message when no generation has been done
+    if not generate_button:
+        st.info("👆 Configure your IP ranges above and click 'Generate Mapping' to start")
+    
+    # Results section (full width)
     if generate_button:
         if dmz_range and internal_range:
             with st.spinner("Generating mapping..."):
